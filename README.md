@@ -9,7 +9,8 @@
 Install-Module MSAL.PS
 ```
 
-- You must have or be able to consent to the following scopes for the enterprise app "Microsoft Graph Command Line Tools":
+- You must have or be able to consent to the following scopes for the enterprise app **Microsoft Graph Command Line Tools**
+
     - Agreement.Read.All
     - AdministrativeUnit.Read.All
     - Directory.Read.All
