@@ -8,7 +8,7 @@
 ```
 Install-Module MSAL.PS
 ```
-[![PIMSCAN1](https://img.shields.io/powershellgallery/v/MSAL.PS.svg?style=flat&logo=powershell&label=PIMSCAN1)]
+[![PIMSCAN1](https://img.shields.io/powershellgallery/v/MSAL.PS.svg?style=flat&logo=powershell&label=PIMSCAN1&version=1)](https://www.powershellgallery.com/packages/MSAL.PS) 
 
 
 - 🔭 I’m currently working on <a href='https://www.patreon.com/RogueMaster'>RogueMaster Custom Firmware for the FlipperZero</a>
