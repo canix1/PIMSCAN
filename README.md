@@ -56,6 +56,6 @@ Install-module MSAL.PS -Scope CurrentUser -Force -Confirm:$False
 
 Results are saved in a HTML file.
 
-Open the Entra_ID_Role_Report_[TenantID].html in you did not supply the **-Show** parameter.
+Open the Entra_ID_Role_Report_[TenantID].html if you did not used the **-Show** parameter.
 
 <br>
