@@ -54,4 +54,8 @@ Install-module MSAL.PS -Scope CurrentUser -Force -Confirm:$False
 .\PIMSCAN.ps1 -TenantId <TenantID> -Show -Verbose
 ```
 
+Results are saved in a HTML file.
+
+Open the Entra_ID_Role_Report_[TenantID].html in you did not supply the **-Show** parameter.
+
 <br>
