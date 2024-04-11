@@ -9,7 +9,7 @@
 
 - PowerShell Module: MSAL.PS
 ```
-Install-Module MSAL.PS
+Install-module MSAL.PS -Scope CurrentUser -Force -Confirm:$False
 ```
 
 - You must have or be able to consent to the following scopes for the enterprise app **Microsoft Graph Command Line Tools**
