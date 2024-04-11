@@ -2,7 +2,7 @@
   <h1 align="center"><b>⚔ <img src="https://github.com/canix1/PIMSCAN/blob/main/img/PIMSCAN.png" width="70%"> ⚔</b></h1>
 </p>
 <p>
-<h2 align="center"><b>Tool to create reports on Entra ID Role Assignments.</b></h2>
+<h2 align="center"><b>A tool to create reports on Entra ID Role Assignments.</b></h2>
 </p>
 <p>
   <h2 align="center"><img src="https://github.com/canix1/PIMSCAN/blob/main/img/Animation.gif" width="80%"> </h2>
