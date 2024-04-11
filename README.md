@@ -1,8 +1,8 @@
 <p>
-  <h1 align="center"><b>⚔ <img src="https://github.com/canix1/PIMSCAN/blob/main/img/PIMSCAN.png" width="50%"> ⚔</b></h1>
+  <h1 align="center"><b>⚔ <img src="https://github.com/canix1/PIMSCAN/blob/main/img/PIMSCAN.png" width="100%"> ⚔</b></h1>
 </p>
 <p>
-  <img src="https://github.com/canix1/PIMSCAN/blob/main/img/Animation.gif" width="50%"> 
+  <img src="https://github.com/canix1/PIMSCAN/blob/main/img/Animation.gif" width="100%"> 
 </p>
 
 ## Prerequisites
