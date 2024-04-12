@@ -21,9 +21,14 @@
     
 
 .NOTES
-    **Version: 1.0**
+**Version: 1.1**
 
-    **11 April, 2024**
+**12 April, 2024**
+
+**New Features**
+* A limited "Read only"-mode that can be used with the Global Reader role.
+
+
 
 
 #>
@@ -48,12 +53,14 @@ Param
     [Switch]
     $ClearCache,
     [Switch]
-    $Show    
+    $Show,
+    [Switch]
+    $LimitedReadOnly
 )
 #$VerbosePreference = "Continue"
 $ToolName = "PIMSCAN"
 $Author = "Robin Granberg @canix1"
-$Version = "1.0"
+$Version = "1.1"
 $ThemeBackGrounColor = "#131313"
 
 
@@ -4469,37 +4476,15 @@ Function Enum-Group
         
     
 }
-
-$scopes = "Agreement.Read.All",`
-"AdministrativeUnit.Read.All",`
-"Directory.Read.All",`
-"email",`
-"EntitlementManagement.Read.All",`
-"Group.Read.All",`
-"IdentityProvider.Read.All",`
-"openid",`
-"Organization.Read.All",`
-"PrivilegedAccess.Read.AzureAD",`          #Not required at the moment
-"PrivilegedAccess.Read.AzureADGroup",`      #Required for https://graph.microsoft.com/beta/privilegedAccess/aadGroups/roleAssignments?
-"PrivilegedAccess.Read.AzureResources",`   #Not required at the moment
-"PrivilegedAssignmentSchedule.Read.AzureADGroup",`
-"PrivilegedEligibilitySchedule.Read.AzureADGroup",`
-"profile",`
-"RoleAssignmentSchedule.Read.Directory",`
-"RoleAssignmentSchedule.ReadWrite.Directory",`
-"RoleEligibilitySchedule.Read.Directory",`
-"RoleManagement.Read.All",`
-"RoleManagement.Read.Directory",`
-"RoleManagement.ReadWrite.Directory",`
-"RoleManagementAlert.Read.Directory",`
-"RoleManagementPolicy.Read.Directory",`
-"RoleManagementPolicy.Read.AzureADGroup",`
-"User.Read",`
-"User.Read.All",`
-"AgreementAcceptance.Read",`
-"AgreementAcceptance.Read.All",`
-"AuditLog.Read.All",`
-"Policy.Read.All"
+# Starts Authentication
+if($LimitedReadOnly)
+{
+    $scopes = "AdministrativeUnit.Read.All Directory.Read.All Group.Read.All PrivilegedAccess.Read.AzureAD PrivilegedAccess.Read.AzureADGroup PrivilegedAccess.Read.AzureResources PrivilegedAssignmentSchedule.Read.AzureADGroup PrivilegedEligibilitySchedule.Read.AzureADGroup RoleAssignmentSchedule.Read.Directory RoleEligibilitySchedule.Read.Directory RoleManagement.Read.All RoleManagement.Read.Directory RoleManagementAlert.Read.Directory RoleManagementPolicy.Read.Directory RoleManagementPolicy.Read.AzureADGroup User.Read User.Read.All offline_access"
+}
+else
+{
+    $scopes = "AdministrativeUnit.Read.All Directory.Read.All Group.Read.All PrivilegedAccess.Read.AzureAD PrivilegedAccess.Read.AzureADGroup PrivilegedAccess.Read.AzureResources PrivilegedAssignmentSchedule.Read.AzureADGroup PrivilegedEligibilitySchedule.Read.AzureADGroup RoleAssignmentSchedule.Read.Directory RoleAssignmentSchedule.ReadWrite.Directory RoleEligibilitySchedule.Read.Directory RoleEligibilitySchedule.ReadWrite.Directory RoleManagement.Read.All RoleManagement.Read.Directory RoleManagementAlert.Read.Directory RoleManagementPolicy.Read.Directory RoleManagementPolicy.Read.AzureADGroup User.Read User.Read.All offline_access"
+}
 
 # Starts Authentication
 if($ClearCache)
@@ -4629,20 +4614,26 @@ $TextInfo = (Get-Culture).TextInfo
                         $MemberObject = $(ConvertTo-ObjectArrayListFromPsCustomObject  $MemberObject)
                         $MemberProperties = $_.principal
                         $RoleScheduleRequests = $null
-                        if($_.roleEligibilityScheduleId)
+
+                        # This requires Write permission - RoleEligibilitySchedule.ReadWrite.Directory or RoleAssignmentSchedule.ReadWrite.Directory
+
+                        if(-not($LimitedReadOnly))
                         {
-                            $MemberObject.assignmentType = "Eligible"
-                            # Check if the schedule id is a GUID, else it will not have a request to it
-                            if( $_.roleEligibilityScheduleId -match '^[A-Za-z0-9]{4}([A-Za-z0-9]{4}\-?){4}[A-Za-z0-9]{12}$')
+                            if($_.roleEligibilityScheduleId)
                             {
-                                $RoleScheduleRequests = Get-RoleEligibilityScheduleRequests -Token $Token -Header $Header -TenantID $TenantID -ObjectID $_.roleEligibilityScheduleId
+                                $MemberObject.assignmentType = "Eligible"
+                                # Check if the schedule id is a GUID, else it will not have a request to it
+                                if( $_.roleEligibilityScheduleId -match '^[A-Za-z0-9]{4}([A-Za-z0-9]{4}\-?){4}[A-Za-z0-9]{12}$')
+                                {
+                                    $RoleScheduleRequests = Get-RoleEligibilityScheduleRequests -Token $Token -Header $Header -TenantID $TenantID -ObjectID $_.roleEligibilityScheduleId
+                                }
                             }
-                        }
-                        else {
-                            # Check if the schedule id is a GUID, else it will not have a request to it
-                            if( $_.roleAssignmentScheduleId -match '^[A-Za-z0-9]{4}([A-Za-z0-9]{4}\-?){4}[A-Za-z0-9]{12}$')
-                            {                            
-                                $RoleScheduleRequests = Get-RoleAssignmentScheduleRequests -Token $Token -Header $Header -TenantID $TenantID -ObjectID $_.roleAssignmentScheduleId
+                            else {
+                                # Check if the schedule id is a GUID, else it will not have a request to it
+                                if( $_.roleAssignmentScheduleId -match '^[A-Za-z0-9]{4}([A-Za-z0-9]{4}\-?){4}[A-Za-z0-9]{12}$')
+                                {                            
+                                    $RoleScheduleRequests = Get-RoleAssignmentScheduleRequests -Token $Token -Header $Header -TenantID $TenantID -ObjectID $_.roleAssignmentScheduleId
+                                }
                             }
                         }
 
